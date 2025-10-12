@@ -9,6 +9,9 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Message;
+use App\Models\Room;
+
 
 class User extends Authenticatable
 {
@@ -29,6 +32,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar',
+        'role',
+        'status',
     ];
 
     /**
@@ -63,5 +69,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function rooms()
+    {
+        return $this->belongsToMany(Room::class);
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    public function receivedMessages()
+    {
+        return $this->hasMany(Message::class, 'to_user_id');
     }
 }
