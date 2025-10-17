@@ -20,9 +20,16 @@ class RoomPolicy
      * Determine whether the user can view the model.
      */
     public function view(User $user, Room $room): bool
-    {
-        return false;
+{
+    // Admins all chat rooms
+    if ($user->role === 'admin') {
+        return true;
     }
+
+    // User with id added
+    return $room->users->contains($user->id);
+}
+
 
     /**
      * Determine whether the user can create models.

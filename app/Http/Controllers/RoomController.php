@@ -26,7 +26,7 @@ class RoomController extends Controller
         /** @var \Illuminate\Database\Eloquent\Collection $rooms */
         $rooms = $user->rooms()->with('users')->get();
 
-        return response()->json($rooms);
+        return view('rooms.index', compact('rooms'));
     }
 
     /**
@@ -40,7 +40,13 @@ class RoomController extends Controller
         $this->authorize('view', $room); // policy
 
         $room->load('users', 'messages.user');
-        return response()->json($room);
+        return view('rooms.show', compact('room'));
+    }
+
+    public function create()
+    {
+        $this->authorize('create', Room::class);
+        return view('rooms.create');
     }
 
     /**
@@ -50,30 +56,28 @@ class RoomController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
-    {
-        $this->authorize('create', Room::class);
+{
+    $this->authorize('create', Room::class);
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'avatar' => 'nullable|image|max:2048',
-        ]);
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'avatar' => 'nullable|image|max:2048',
+    ]);
 
-        $avatarPath = null;
-        if ($request->hasFile('avatar')) {
-            $avatarPath = $request->file('avatar')->store('rooms', 'public');
-        }
-
-        /** @var Room $room */
-        $room = Room::create([
-            'name' => $request->name,
-            'avatar' => $avatarPath,
-        ]);
-
-        // adds the admin user that created the chat room
-        $room->users()->attach(Auth::id());
-
-        return response()->json($room, 201);
+    $avatarPath = null;
+    if ($request->hasFile('avatar')) {
+        $avatarPath = $request->file('avatar')->store('rooms', 'public');
     }
+
+    $room = Room::create([
+        'name' => $request->name,
+        'avatar' => $avatarPath,
+    ]);
+
+    $room->users()->attach(Auth::id());
+
+    return redirect()->route('rooms.index')->with('success', 'Room created successfully!');
+}
 
     /**
      * invite a user to the chat room

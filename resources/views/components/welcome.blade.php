@@ -6,7 +6,7 @@
     </h1>
 
     <p class="mt-4 text-gray-600 leading-relaxed">
-        Your space to connect, share, and chat freely. Start conversations, create new rooms, and explore what’s happening around you.
+        Your space to connect, share, and chat freely. Start conversations and explore what’s happening around you.
     </p>
 </div>
 
@@ -14,7 +14,7 @@
     <div class="bg-[#ac88cb]/10 p-6 rounded-2xl shadow-sm">
         <h2 class="text-xl font-semibold text-[#ac88cb] mb-2">Chat Rooms</h2>
         <p class="text-gray-600 text-sm">
-            Join or create chat rooms to talk with your friends, teams, or community.
+            Join chat rooms to talk with team or community.
         </p>
     </div>
 
@@ -28,11 +28,11 @@
     <div class="bg-[#f37ba0]/10 p-6 rounded-2xl shadow-sm">
         <h2 class="text-xl font-semibold text-[#f37ba0] mb-2">Notifications</h2>
         <p class="text-gray-600 text-sm">
-            Keep track of mentions, replies, and updates so you never miss a message.
+            Keep track of replies, and updates so you never miss a message.
         </p>
     </div>
 
-    <div class="bg-[#b5d54b]/10 p-6 rounded-2xl shadow-sm">
+    <div class="bg-[]/10 p-6 rounded-2xl shadow-sm">
         <h2 class="text-xl font-semibold text-[#b5d54b] mb-2">Profile & Settings</h2>
         <p class="text-gray-600 text-sm">
             Customize your profile, manage your preferences, and make Yapping truly yours.
