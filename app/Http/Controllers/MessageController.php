@@ -33,6 +33,12 @@ class MessageController extends Controller
                 return response()->json(['error' => 'You are not in the chat room'], 403);
             }
         }
+
+        if ($request->to_user_id) {
+            if ($request->to_user_id == $user->id) {
+                return response()->json(['error' => 'Cannot send messages to yourself'], 422);
+            }
+        }
     
         $message = Message::create([
             'user_id' => $user->id,
@@ -50,8 +56,11 @@ class MessageController extends Controller
             'body' => $message->body
         ]);
     
-        $event = new MessageSent($message);
-        broadcast($event);
+        if ($message->room_id) {
+            broadcast(new \App\Events\MessageSent($message));
+        } else {
+            broadcast(new \App\Events\DirectMessageSent($message));
+        }
     
         \Log::info('MessageSent event got in');
         

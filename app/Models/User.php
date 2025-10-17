@@ -85,4 +85,41 @@ class User extends Authenticatable
     {
         return $this->hasMany(Message::class, 'to_user_id');
     }
+
+    /**
+     * Unread Messages count
+     */
+    public function unreadMessagesCount()
+    {
+        return Message::where('to_user_id', $this->id)
+                      ->whereNull('read_at')
+                      ->count();
+    }
+
+    /**
+     *  Unread Messages count with a specific user
+     */
+    public function unreadMessagesFrom($userId)
+    {
+        return Message::where('to_user_id', $this->id)
+                      ->where('user_id', $userId)
+                      ->whereNull('read_at')
+                      ->count();
+    }
+
+    /**
+     * Last message
+     */
+    public function lastMessageWith($userId)
+    {
+        return Message::where(function($q) use ($userId) {
+            $q->where('user_id', $this->id)
+              ->where('to_user_id', $userId);
+        })->orWhere(function($q) use ($userId) {
+            $q->where('user_id', $userId)
+              ->where('to_user_id', $this->id);
+        })
+        ->latest()
+        ->first();
+    }
 }

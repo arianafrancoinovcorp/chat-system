@@ -79,23 +79,26 @@ class RoomController extends Controller
     return redirect()->route('rooms.index')->with('success', 'Room created successfully!');
 }
 
-    /**
-     * invite a user to the chat room
-     *
-     * @param Room $room
-     * @param User $user
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function inviteUser(Room $room, User $user)
-    {
-        $this->authorize('update', $room);
+public function invite(Request $request, Room $room)
+{
+    $request->validate([
+        'email' => 'required|email|exists:users,email',
+    ]);
 
-        if (!$room->users->contains($user->id)) {
-            $room->users()->attach($user->id);
-        }
-
-        return response()->json([
-            'message' => "User {$user->name} added to the chat room {$room->name}"
-        ]);
+    if (auth()->user()->role !== 'admin') {
+        return response()->json(['message' => 'Unauthorized'], 403);
     }
+
+    $user = User::where('email', $request->email)->first();
+
+    if ($room->users()->where('user_id', $user->id)->exists()) {
+        return response()->json(['message' => 'User already in this room.'], 400);
+    }
+
+    $room->users()->attach($user->id);
+
+
+    return response()->json(['message' => 'User invited successfully.']);
+}
+
 }

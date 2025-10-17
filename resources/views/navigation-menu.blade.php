@@ -11,18 +11,29 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                </div>
 
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link href="{{ route('rooms.index') }}" :active="request()->routeIs('rooms.*')">
-                        {{ __('Chat Rooms') }}
+                    <x-nav-link :href="route('rooms.index')" :active="request()->routeIs('rooms.*')">
+                        {{ __('Rooms') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('direct.index')" :active="request()->routeIs('direct.*')">
+                        <div class="flex items-center space-x-2">
+                            <span>{{ __('Messages') }}</span>
+                            @php
+                            $totalUnread = auth()->user()->unreadMessagesCount();
+                            @endphp
+                            @if($totalUnread > 0)
+                            <span class="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                                {{ $totalUnread > 9 ? '9+' : $totalUnread }}
+                            </span>
+                            @endif
+                        </div>
                     </x-nav-link>
                 </div>
-
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
